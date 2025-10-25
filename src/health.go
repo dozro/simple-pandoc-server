@@ -15,7 +15,7 @@ func getHealth(c *gin.Context) {
 			"TimeStamp": time.Now().Format(time.DateTime),
 		})
 	} else {
-		c.IndentedJSON(http.StatusBadGateway, gin.H{
+		c.IndentedJSON(http.StatusServiceUnavailable, gin.H{
 			"isHealthy": isHealthy,
 			"TimeStamp": time.Now().Format(time.DateTime),
 			"error":     err.Error(),
