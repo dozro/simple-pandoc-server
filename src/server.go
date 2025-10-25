@@ -21,6 +21,8 @@ func startServer(cfg Config) {
 	router.POST("/parse/latex/toPdf/plain", convert.ParseLatexPlainToPdf)
 	// typst
 	router.POST("/parse/typst/toHtml/raw", convert.ParseTypstRawToHtml)
+	// health
+	router.GET("/healt", getHealth)
 	err = router.Run(cfg.ListenOnIP)
 	if err != nil {
 		log.Fatal(err)
