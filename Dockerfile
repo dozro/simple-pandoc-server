@@ -9,12 +9,12 @@ RUN go build
 
 FROM alpine:latest
 
-RUN apk add texlive texmf-dist-lang
 RUN apk add pandoc-cli
 RUN apk add typst
 
 ENV LISTEN_ON="0.0.0.0:3030"
 ENV LATEX_COMMAND="/usr/bin/pdflatex"
+ENV GOTEX_ENABLE="false"
 EXPOSE 3030
 
 WORKDIR /app

@@ -48,6 +48,12 @@ func PreflightConfiguration(config Config) {
 	log.Info("preflight applying configuration")
 	err := os.Setenv("PANDOC_COMMAND", config.PandocCommand)
 	err = os.Setenv("LATEX_COMMAND", config.LatexCommand)
+	if !config.UseGoTex {
+		log.Infof("disabling Gotex")
+		convert.DisableGoTex()
+	} else {
+		convert.EnableGoTex()
+	}
 	if err != nil {
 		log.Errorf("Error setting Environment Variables: %s", err)
 	}

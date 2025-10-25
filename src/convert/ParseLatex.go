@@ -16,6 +16,14 @@ type LatexData struct {
 }
 
 func ParseLatexRawToPDF(c *gin.Context) {
+	if isGoTexEnabled {
+		parseLatexUsingGoTexRawToPDF(c)
+	} else {
+		parseLatexUsingPandocRawToPdf(c)
+	}
+}
+
+func parseLatexUsingGoTexRawToPDF(c *gin.Context) {
 	log.Debugf("trying to parse latex data received from %s via %s", c.Request.Host, c.Request.URL.String())
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -47,6 +55,24 @@ func ParseLatexRawToPDF(c *gin.Context) {
 }
 
 func ParseLatexPlainToPdf(c *gin.Context) {
+	if isGoTexEnabled {
+		parseLatexUsingGoTexPlainToPdf(c)
+	} else {
+		parseLatexUsingPandocPlainToPdf(c)
+	}
+}
+
+func parseLatexUsingPandocPlainToPdf(c *gin.Context) {
+	log.Debugf("trying to parse latex string from %s via %s", c.Request.Host, c.Request.URL.String())
+	var data LatexData
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	out, _ := convertToPdfUsingPandoc("latex", []byte(data.latexString))
+	c.Data(200, "application/pdf", out.Bytes())
+}
+
+func parseLatexUsingGoTexPlainToPdf(c *gin.Context) {
 	log.Debugf("trying to parse latex string from %s via %s", c.Request.Host, c.Request.URL.String())
 	var data LatexData
 	if err := c.BindJSON(&data); err != nil {
@@ -72,6 +98,28 @@ func ParseLatexPlainToHtml(c *gin.Context) {
 	}
 	out, _ := convertToHtmlUsingPandoc("latex", []byte(data.latexString))
 	c.Data(200, "text/html", out.Bytes())
+}
+
+func parseLatexUsingPandocRawToPdf(c *gin.Context) {
+	log.Debugf("trying to parse latex string from %s via %s", c.Request.Host, c.Request.URL.String())
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", err.Error()))
+		log.Errorf("File upload error: %s", c.Request.URL.String())
+	}
+	f, err := file.Open()
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s (File could not be opened)", c.Request.URL.String()))
+		log.Errorf("File upload error: %s", c.Request.URL.String())
+	}
+	defer f.Close()
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", c.Request.URL.String()))
+		log.Errorf("File upload error: %s", c.Request.URL.String())
+	}
+	out, _ := convertToPdfUsingPandoc("latex", data)
+	c.Data(200, "application/pdf", out.Bytes())
 }
 
 func ParseLatexRawToHtml(c *gin.Context) {

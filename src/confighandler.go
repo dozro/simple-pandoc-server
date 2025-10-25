@@ -14,6 +14,7 @@ type Config struct {
 	Debug         bool
 	ListenOnIP    string
 	LatexCommand  string
+	UseGoTex      bool
 	PandocCommand string
 	typstCommand  string
 	trustedProxy  string
@@ -37,6 +38,11 @@ func readConfigFromEnv() Config {
 	latexCommandFlag := flag.String("latex-command", os.Getenv("LATEX_COMMAND"), "the path to pdflatex or equiv")
 	pandocCommandFlag := flag.String("pandoc-command", os.Getenv("PANDOC_COMMAND"), "the path to pandoc")
 	typstCommandFlag := flag.String("typst-command", os.Getenv("TYPST_COMMAND"), "the path to typst")
+	defaultGoTexEnable := true
+	if os.Getenv("GOTEX_ENABLE") == "false" {
+		defaultGoTexEnable = false
+	}
+	enableGoTexFlag := flag.Bool("enable-gotex", defaultGoTexEnable, "Enable GoTex compatibility, if disabled it will use pandoc")
 	var defaultTrustedProxy string
 	if len(os.Getenv("TRUSTED_PROXY")) != 0 {
 		defaultTrustedProxy = os.Getenv("TRUSTED_PROXY")
@@ -53,5 +59,6 @@ func readConfigFromEnv() Config {
 		PandocCommand: *pandocCommandFlag,
 		typstCommand:  *typstCommandFlag,
 		trustedProxy:  *trustedProxyFlag,
+		UseGoTex:      *enableGoTexFlag,
 	}
 }
