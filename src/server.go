@@ -22,7 +22,7 @@ func startServer(cfg Config) {
 	// typst
 	router.POST("/parse/typst/toHtml/raw", convert.ParseTypstRawToHtml)
 	// health
-	router.GET("/healt", getHealth)
+	router.GET("/health", getHealth)
 	err = router.Run(cfg.ListenOnIP)
 	if err != nil {
 		log.Fatal(err)
