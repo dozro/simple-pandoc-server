@@ -11,6 +11,7 @@ FROM alpine:latest
 
 RUN apk add pandoc-cli
 RUN apk add typst
+RUN apk add curl
 
 ENV LISTEN_ON="0.0.0.0:3030"
 ENV LATEX_COMMAND="/usr/bin/pdflatex"
