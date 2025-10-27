@@ -2,11 +2,11 @@ FROM alpine:latest AS buildenv
 LABEL authors="rye"
 
 RUN apk add go
-RUN apk add go-task
+RUN apk add npm
+RUN npm install -g @go-task/cli
 WORKDIR /build
 COPY . .
 RUN task
-
 
 FROM alpine:latest
 
