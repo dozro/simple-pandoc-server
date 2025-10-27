@@ -18,7 +18,7 @@ tasks:
       - mkdir -p {{.TASKFILE_DIR}}/out
   build:
     desc: "Task to build the application"
-    sources: [ '**/.go' ]
+    sources: [ '**/*.go' ]
     generates:
       - '{{.TASKFILE_DIR}}/out/simple-pandoc-server'
     aliases:
@@ -44,7 +44,7 @@ tasks:
     desc: "build the docker image"
     dir: '{{.TASKFILE_DIR}}'
     sources:
-      - '**/.go'
+      - '**/*.go'
       - '{{.TASKFILE_DIR}}/Dockerfile'
     cmds:
       - docker build -t sps .
