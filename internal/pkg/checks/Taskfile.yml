@@ -1,0 +1,23 @@
+# A guide to the usage of Taskfile: https://taskfile.dev/docs/guide
+
+version: 3
+
+tasks:
+  prepare-build-env:
+    desc: "prepare the environment to build the check pkg"
+    platforms: [ linux, darwin ]
+    dir: '{{.TASKFILE_DIR}}'
+    cmds:
+      - mkdir -p {{.TASKFILE_DIR}}/out
+  build:
+    aliases:
+      - default
+    desc: "build the check pkg"
+    sources:
+      - '{{.TASKFILE_DIR}}/inflight.go'
+      - '{{.TASKFILE_DIR}}/preflight.go'
+    dir: '{{.TASKFILE_DIR}}'
+    cmds:
+      - task: prepare-build-env
+        silent: false
+      - go build -o {{.TASKFILE_DIR}}/out/check .

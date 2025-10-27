@@ -1,4 +1,4 @@
-package main
+package confighandling
 
 import (
 	"flag"
@@ -16,11 +16,11 @@ type Config struct {
 	LatexCommand  string
 	UseGoTex      bool
 	PandocCommand string
-	typstCommand  string
-	trustedProxy  string
+	TypstCommand  string
+	TrustedProxy  string
 }
 
-func readConfigFromEnv() Config {
+func ReadConfigFromEnv() Config {
 	debugOutFlag := flag.Bool("debug", os.Getenv("DEBUG") == "true", "Enable debug mode")
 	var defaultTimeout time.Duration
 	if len(os.Getenv("TIMEOUT")) != 0 {
@@ -57,8 +57,8 @@ func readConfigFromEnv() Config {
 		ListenOnIP:    *listenOnIpFlag,
 		LatexCommand:  *latexCommandFlag,
 		PandocCommand: *pandocCommandFlag,
-		typstCommand:  *typstCommandFlag,
-		trustedProxy:  *trustedProxyFlag,
+		TypstCommand:  *typstCommandFlag,
+		TrustedProxy:  *trustedProxyFlag,
 		UseGoTex:      *enableGoTexFlag,
 	}
 }

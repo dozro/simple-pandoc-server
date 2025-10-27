@@ -1,0 +1,57 @@
+# A guide to the usage of Taskfile: https://taskfile.dev/docs/guide
+
+version: 3
+
+includes:
+  internal:
+    dir: ./internal
+    taskfile: ./internal
+
+method: checksum
+
+tasks:
+  prepare-build-env:
+    desc: "prepare the environment to build"
+    platforms: [ linux, darwin ]
+    dir: '{{.TASKFILE_DIR}}'
+    cmds:
+      - mkdir -p {{.TASKFILE_DIR}}/out
+  build:
+    desc: "Task to build the application"
+    sources: [ '**/*.go' ]
+    generates:
+      - '{{.TASKFILE_DIR}}/out/simple-pandoc-server'
+    aliases:
+      - default
+    dir: "{{.TASKFILE_DIR}}/cmd/simple-pandoc-server"
+    cmds:
+      - task: prepare-build-env
+        silent: false
+      - task: internal:default
+        silent: false
+      - go build -o {{.TASKFILE_DIR}}/out/simple-pandoc-server .
+  cleanup:
+    desc: "cleanup the build environment"
+    dir: '{{.TASKFILE_DIR}}'
+    platforms: [ linux, darwin ]
+    preconditions:
+      - sh: test -d {{.TASKFILE_DIR}}/out
+        msg: "No out ({{.TASKFILE_DIR}}/out) directory found, nothing to do"
+    cmds:
+      - rm {{.TASKFILE_DIR}}/out/simple-pandoc-server
+      - rmdir {{.TASKFILE_DIR}}/out
+  docker-build:
+    desc: "build the docker image"
+    dir: '{{.TASKFILE_DIR}}'
+    sources:
+      - '**/*.go'
+      - '{{.TASKFILE_DIR}}/Dockerfile'
+    cmds:
+      - docker build -t sps .
+  docker-run:
+    desc: "build and run the docker image"
+    dir: '{{.TASKFILE_DIR}}'
+    deps:
+      - docker-build
+    cmds:
+      - docker run --rm -p 3030:3030 sps
