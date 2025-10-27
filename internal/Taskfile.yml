@@ -1,3 +1,14 @@
 # A guide to the usage of Taskfile: https://taskfile.dev/docs/guide
 
 version: 3
+
+includes:
+  checks:
+    dir: ./pkg/checks
+    taskfile: ./pkg/checks
+
+tasks:
+  default:
+    cmds:
+      - task: checks:build
+        silent: false
