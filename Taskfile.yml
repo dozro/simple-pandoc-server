@@ -1,0 +1,27 @@
+# A guide to the usage of Taskfile: https://taskfile.dev/docs/guide
+
+version: 3
+
+includes:
+  internal:
+    dir: ./internal
+    taskfile: ./internal
+
+tasks:
+  prepare-build-env:
+    desc: "prepare the environment to build"
+    dir: '{{.TASKFILE_DIR}}'
+    cmds:
+      - mkdir -p {{.TASKFILE_DIR}}/out
+  build:
+    desc: "Task to build the application"
+    sources: [ '**/.go' ]
+    generates:
+      - '{{.TASKFILE_DIR}}/out/simple-pandoc-server'
+    aliases:
+      - default
+    dir: "{{.TASKFILE_DIR}}/cmd/simple-pandoc-server"
+    cmds:
+      - task: prepare-build-env
+        silent: false
+      - go build -o {{.TASKFILE_DIR}}/out/simple-pandoc-server .
