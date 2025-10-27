@@ -4,8 +4,7 @@ LABEL authors="rye"
 RUN apk add go
 WORKDIR /build
 COPY . .
-WORKDIR /build/src
-RUN go build
+RUN go build ./cmd/simple-pandoc-server/
 
 FROM alpine:latest
 
@@ -19,7 +18,7 @@ ENV GOTEX_ENABLE="false"
 EXPOSE 3030
 
 WORKDIR /app
-COPY --from=buildenv /build/src/simple-pandoc-server /app/simple-pandoc-server
+COPY --from=buildenv /build/simple-pandoc-server /app/simple-pandoc-server
 
 HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3030/health || exit 1
 

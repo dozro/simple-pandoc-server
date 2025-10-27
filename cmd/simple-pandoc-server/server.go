@@ -1,16 +1,17 @@
 package main
 
 import (
-	"simple-pandoc-server/convert"
+	cfgh "simple-pandoc-server/internal/pkg/confighandling"
+	"simple-pandoc-server/internal/pkg/convert"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
-func startServer(cfg Config) {
+func startServer(cfg cfgh.Config) {
 	log.Debugf("starting web server on %s", cfg.ListenOnIP)
 	router := gin.Default()
-	err := router.SetTrustedProxies([]string{cfg.trustedProxy})
+	err := router.SetTrustedProxies([]string{cfg.TrustedProxy})
 	if err != nil {
 		log.Fatal(err)
 	}

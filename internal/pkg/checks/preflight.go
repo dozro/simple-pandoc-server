@@ -1,10 +1,11 @@
-package main
+package checks
 
 import (
 	"bytes"
 	"os"
 	"os/exec"
-	"simple-pandoc-server/convert"
+	cfgh "simple-pandoc-server/internal/pkg/confighandling"
+	"simple-pandoc-server/internal/pkg/convert"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -44,7 +45,7 @@ func PreflightPackageSearch() {
 	searchPackageAndSetEnv("typst", "TYPST_COMMAND")
 }
 
-func PreflightConfiguration(config Config) {
+func PreflightConfiguration(config cfgh.Config) {
 	log.Info("preflight applying configuration")
 	err := os.Setenv("PANDOC_COMMAND", config.PandocCommand)
 	err = os.Setenv("LATEX_COMMAND", config.LatexCommand)
@@ -60,9 +61,9 @@ func PreflightConfiguration(config Config) {
 	convert.SetTimeout(config.Timeout)
 }
 
-func PreflightConfigCheck(config Config) {
+func PreflightConfigCheck(config cfgh.Config) {
 	log.Info("preflight checking configuration")
-	if config.trustedProxy == "0.0.0.0" {
+	if config.TrustedProxy == "0.0.0.0" {
 		log.Warn("trusted proxy is set to 0.0.0.0. This is considered UNSAFE. Please set a trusted proxy either by setting ´TRUSTED_PROXY´ or by using the ´-trust-proxy´ command line option.")
 	}
 	if config.Debug {
