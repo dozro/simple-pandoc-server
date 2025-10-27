@@ -1,15 +1,29 @@
 # simple pandoc server
 
+simple-pandoc-server is a lightweight HTTP server wrapper for Pandoc that allows document conversions via API-calls.  
+
+## Motivation
+
+an easy way to convert files saved in latex for example to html for presentation in Gitea.
+A guide on how to do this using this service can be found over in the [Wiki](https://github.com/dozro/simple-pandoc-server/wiki/Use-as-Renderer-for-Gitea).
+
 ## building
 
 *for the latest building guide see the [Wiki](https://github.com/dozro/simple-pandoc-server/wiki/building)*
 
 ### build using go-task
 
-Simply clone the Repo (newer then the merge of https://github.com/dozro/simple-pandoc-server/pull/4) and make sure you have Task installed.  
-An installation guide can be found here: [Installation guide for go-task](https://taskfile.dev/docs/installation).   
+#### Requirements
 
-The Taskfile, where the build configuration is defined, in the [Taskfile.yml](./Taskfile.yml).
+- having [Go Task](https://taskfile.dev/docs/installation) installed with version 3 or newer
+- having [Go](https://go.dev/dl/) installed with version 1.24 or newer
+- having [pandoc](https://pandoc.org/installing.html) installed
+
+#### Guide
+
+Clone the repository at or after [PR #4](https://github.com/dozro/simple-pandoc-server/pull/4) was merged (for Task support) and make sure you have Task installed.  
+
+The Taskfile is defined in the [Taskfile.yml](./Taskfile.yml).
 
 Then run
 
