@@ -12,8 +12,11 @@ import (
 func Register(cfg cfgh.Config) {
 	var add []string
 	add = strings.Split(cfg.ListenOnIP, ":")
-	port, _ := strconv.Atoi(add[1])
-	_, err := zeroconf.Register("pandoc", "_http._tcp", add[0], port, nil, nil)
+	port, err := strconv.Atoi(add[1])
+	if err != nil {
+		log.Fatalf("Invalid port in ListenOnIP: %v", err)
+	}
+	_, err = zeroconf.Register("pandoc", "_http._tcp", add[0], port, nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
