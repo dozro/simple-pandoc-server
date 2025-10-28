@@ -2,7 +2,6 @@ package convert
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -25,21 +24,9 @@ func ParseLatexRawToPDF(c *gin.Context) {
 
 func parseLatexUsingGoTexRawToPDF(c *gin.Context) {
 	log.Debugf("trying to parse latex data received from %s via %s", c.Request.Host, c.Request.URL.String())
-	file, err := c.FormFile("file")
+	data, err := extractDataFromReq(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", err.Error()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
-	}
-	f, err := file.Open()
-	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s (File could not be opened)", c.Request.URL.String()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
-	}
-	defer f.Close()
-	data, err := ioutil.ReadAll(f)
-	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", c.Request.URL.String()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
+		log.Error(err)
 	}
 	pdf, err := gotex.Render(string(data), gotex.Options{
 		Command: os.Getenv("LATEX_COMMAND"),
@@ -49,7 +36,6 @@ func parseLatexUsingGoTexRawToPDF(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Sprintf("failed to render file: %s", c.Request.URL.String()))
 		log.Errorf("failed to render file: %s (error: %s)", c.Request.URL.String(), err.Error())
 	}
-	_ = f.Close()
 	c.Data(200, "application/pdf", []byte(pdf))
 	log.Debugf("successfully parsed latex data from %s via %s", c.Request.Host, c.Request.URL.String())
 }
@@ -102,21 +88,9 @@ func ParseLatexPlainToHtml(c *gin.Context) {
 
 func parseLatexUsingPandocRawToPdf(c *gin.Context) {
 	log.Debugf("trying to parse latex string from %s via %s", c.Request.Host, c.Request.URL.String())
-	file, err := c.FormFile("file")
+	data, err := extractDataFromReq(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", err.Error()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
-	}
-	f, err := file.Open()
-	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s (File could not be opened)", c.Request.URL.String()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
-	}
-	defer f.Close()
-	data, err := ioutil.ReadAll(f)
-	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", c.Request.URL.String()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
+		log.Error(err)
 	}
 	out, _ := convertToPdfUsingPandoc("latex", data)
 	c.Data(200, "application/pdf", out.Bytes())
@@ -124,21 +98,9 @@ func parseLatexUsingPandocRawToPdf(c *gin.Context) {
 
 func ParseLatexRawToHtml(c *gin.Context) {
 	log.Debugf("trying to parse latex string from %s via %s", c.Request.Host, c.Request.URL.String())
-	file, err := c.FormFile("file")
+	data, err := extractDataFromReq(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", err.Error()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
-	}
-	f, err := file.Open()
-	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s (File could not be opened)", c.Request.URL.String()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
-	}
-	defer f.Close()
-	data, err := ioutil.ReadAll(f)
-	if err != nil {
-		c.String(http.StatusBadRequest, fmt.Sprintf("File upload error: %s", c.Request.URL.String()))
-		log.Errorf("File upload error: %s", c.Request.URL.String())
+		log.Error(err)
 	}
 	out, _ := convertToHtmlUsingPandoc("latex", data)
 	c.Data(200, "text/html", out.Bytes())
