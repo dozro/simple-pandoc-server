@@ -43,7 +43,12 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Extract version number
         id: vars
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=" >> $GITHUB_OUTPUT
+          fi
 
 
       # Install the cosign tool except on PR
