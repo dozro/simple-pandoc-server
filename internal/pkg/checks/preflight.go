@@ -52,19 +52,14 @@ func setMathRenderingEngine(config cfgh.Config) {
 	switch config.MathRenderingEngine {
 	case "mathjax":
 		mathrenderingengine = convert.Mathjax
-		break
 	case "mathml":
 		mathrenderingengine = convert.Mathml
-		break
 	case "webtex":
 		mathrenderingengine = convert.Webtex
-		break
 	case "katex":
 		mathrenderingengine = convert.Katex
-		break
 	case "gladtex":
 		mathrenderingengine = convert.Gladtex
-		break
 	default:
 		mathrenderingengine = convert.Katex
 	}
