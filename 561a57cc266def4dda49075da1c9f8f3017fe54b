@@ -1,0 +1,23 @@
+https://github.com/dozro/simple-pandoc-server/pull/7#issue-3560944963
+
+For changes see previous Commits and PRs on devel
+
+This pull request introduces several major improvements to the project, including a new modular build system using Taskfiles, a refactored configuration handling system, and enhanced Docker and CI workflows. The codebase has been reorganized for better maintainability, with clearer separation of concerns and improved environment/configuration management. These changes make the application easier to build, configure, and extend.
+
+**Build System and CI Improvements**
+* Added `Taskfile.yml` and supporting Taskfiles for modular builds, cleanup, and Docker integration, enabling streamlined build and development workflows. (`Taskfile.yml`, `internal/Taskfile.yml`, `internal/pkg/checks/Taskfile.yml`) [[1]](diffhunk://#diff-cd2d359855d0301ce190f1ec3b4c572ea690c83747f6df61c9340720e3d2425eR1-R61) [[2]](diffhunk://#diff-ddcb824d87069928593bfbcc4abf770a559758283a018d5d399332df70b594d3R1-R14) [[3]](diffhunk://#diff-094cf68bae8781cc98567a87fbd4af08db7707f1803713d6751b86af50462a11R1-R23)
+* Added `.github/workflows/go-lint-test-vet.yml` for automated linting, vetting, and formatting checks in CI, improving code quality and reliability. (`.github/workflows/go-lint-test-vet.yml`)
+
+**Configuration and Environment Handling**
+* Introduced a new `Config` struct and `ReadConfigFromEnv` function in `internal/pkg/confighandling/confighandler.go`, refactoring configuration management to support both environment variables and command-line flags. (`internal/pkg/confighandling/confighandler.go`)
+* Refactored server and preflight logic to use the new configuration system, improving clarity and maintainability. (`cmd/simple-pandoc-server/main.go`, `cmd/simple-pandoc-server/server.go`, `internal/pkg/checks/preflight.go`) [[1]](diffhunk://#diff-77a916110261d359c1b1c376ba370c38c232dba2fee6c264d2cf53afc781ca1fR4-R22) [[2]](diffhunk://#diff-8aa3d2d4bd1ddcbf27cf3d17c02134ac0119d92a60060d6fdb8ce7c3f713b64bL4-R14) [[3]](diffhunk://#diff-67fe4dfcf6242a22bc11c58aaf6f99dcf440655aa51ee26c1d65dccf02143221L1-R9)
+
+**Codebase Reorganization**
+* Moved and renamed source files from `src/` to a more modular structure under `cmd/` and `internal/pkg/`, and updated imports accordingly for better separation of concerns. (Multiple files: `health.go`, `main.go`, `server.go`, `convert/ParseLatex.go`, `convert/ParseTypst.go`, etc.) [[1]](diffhunk://#diff-dc6e07aae9156af64030a7d91de4d32fe308771d29e0112dd3cd1296e64765a6R5-R12) [[2]](diffhunk://#diff-6188fa298ef301d2e455824cd1491265f9465355cd7a2b6295b459358720f6cdL15-R15) [[3]](diffhunk://#diff-42563825a5f861f6ad4cbe0bc0f10eeacc208d237900c91229c98e52e7fa0a73L13-R13) [[4]](diffhunk://#diff-67fe4dfcf6242a22bc11c58aaf6f99dcf440655aa51ee26c1d65dccf02143221L1-R9)
+* Added `internal/pkg/convert/mathRenderingOptions.go` to encapsulate math rendering engine options, and integrated math rendering configuration into the build and runtime flow. (`internal/pkg/convert/mathRenderingOptions.go`, `internal/pkg/convert/config.go`, `internal/pkg/checks/preflight.go`) [[1]](diffhunk://#diff-6cfcf21832d62a51826e96087ccee4c70dafa93005c85e0a5b7cd948b9773986R1-R24) [[2]](diffhunk://#diff-78be196dc96d49daf7b38ec309849a386038db23171ee28367792a492bf2cb3cR7) [[3]](diffhunk://#diff-78be196dc96d49daf7b38ec309849a386038db23171ee28367792a492bf2cb3cR18-R21) [[4]](diffhunk://#diff-67fe4dfcf6242a22bc11c58aaf6f99dcf440655aa51ee26c1d65dccf02143221L42-R69)
+
+**Docker and Build Artifacts**
+* Updated `Dockerfile` to use Task for building, improved environment variable handling, and changed artifact paths for consistency with the new build system. (`Dockerfile`, `.dockerignore`) [[1]](diffhunk://#diff-dd2c0eb6ea5cfc6c4bd4eac30934e2d5746747af48fef6da689e85b752f39557R5-R27) [[2]](diffhunk://#diff-2f754321d62f08ba8392b9b168b83e24ea2852bb5d815d63e767f6c3d23c6ac5R1-R2)
+
+**Documentation**
+* Expanded `README.md` with detailed build instructions, motivation, and links to the Wiki for further guidance, making it easier for new contributors and users to get started. (`README.md`)
