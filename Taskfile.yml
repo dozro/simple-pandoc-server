@@ -55,3 +55,7 @@ tasks:
       - docker-build
     cmds:
       - docker run --rm -p 3030:3030 sps
+  vet:
+    desc: "run go vet"
+    cmds:
+      - go vet ./...

@@ -10,7 +10,7 @@ import (
 )
 
 type TypstData struct {
-	typstString string `json:"typstString"`
+	TypstString string `json:"typstString"`
 }
 
 func ParseTypstRawToHtml(c *gin.Context) {
