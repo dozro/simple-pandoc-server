@@ -86,7 +86,12 @@ func PreflightConfiguration(config cfgh.Config) {
 	}
 	convert.SetTimeout(config.Timeout)
 	setMathRenderingEngine(config)
-	go zero.Register(config)
+	go func() {
+		_, err := zero.Register(config)
+		if err != nil {
+			log.Errorf("Error registering zero plugin: %s", err)
+		}
+	}()
 }
 
 func PreflightConfigCheck(config cfgh.Config) {
