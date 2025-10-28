@@ -12,7 +12,7 @@ import (
 )
 
 func generateMathRenderingCmdFlag() string {
-	if len(mathRenderingConfig.MathRenderingURL) == 0 && (mathRenderingConfig.MathRenderingEngine == Mathjax || mathRenderingConfig.MathRenderingEngine == Webtex || mathRenderingConfig.MathRenderingEngine == Katex) {
+	if len(mathRenderingConfig.MathRenderingURL) > 0 && (mathRenderingConfig.MathRenderingEngine == Mathjax || mathRenderingConfig.MathRenderingEngine == Webtex || mathRenderingConfig.MathRenderingEngine == Katex) {
 		return fmt.Sprintf("--%s=%s", MathRenderingEngineName[mathRenderingConfig.MathRenderingEngine], mathRenderingConfig.MathRenderingURL)
 	} else {
 		return fmt.Sprintf("--%s", MathRenderingEngineName[mathRenderingConfig.MathRenderingEngine])
