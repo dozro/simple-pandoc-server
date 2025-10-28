@@ -7,6 +7,7 @@ import (
 	cfgh "simple-pandoc-server/internal/pkg/confighandling"
 	"simple-pandoc-server/internal/pkg/convert"
 	"simple-pandoc-server/internal/pkg/zero"
+	"sync"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -41,9 +42,17 @@ func determineVersionOfPackageAndSetEnv(command string, envName string) {
 
 func PreflightPackageSearch() {
 	log.Info("searching for packages")
-	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND")
-	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND")
-	go searchPackageAndSetEnv("typst", "TYPST_COMMAND")
+	var searchPackageAndSetEnvGroup sync.WaitGroup
+	searchPackageAndSetEnvGroup.Go(func() {
+		searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND")
+	})
+	searchPackageAndSetEnvGroup.Go(func() {
+		searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND")
+	})
+	searchPackageAndSetEnvGroup.Go(func() {
+		searchPackageAndSetEnv("typst", "TYPST_COMMAND")
+	})
+	searchPackageAndSetEnvGroup.Wait()
 }
 
 func setMathRenderingEngine(config cfgh.Config) {
