@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func searchPackageAndSetEnv(pkgname string, envname string) {
+func searchPackageAndSetEnv(pkgname string, envname string, wg *sync.WaitGroup) {
 	path, err := exec.LookPath(pkgname)
 	if err != nil {
 		log.Errorf("Could not find package %s in path not setting it as Env %s, it has to manually be set or cmdline args have to be used: %s", pkgname, envname, err)
@@ -20,6 +20,7 @@ func searchPackageAndSetEnv(pkgname string, envname string) {
 	}
 	log.Infof("found package %s in path setting it as Env %s: %s", pkgname, envname, path)
 	_ = os.Setenv(envname, path)
+	wg.Done()
 }
 
 func determineVersionOfPackageAndSetEnv(command string, envName string) {
@@ -44,9 +45,9 @@ func PreflightPackageSearch() {
 	log.Info("searching for packages")
 	var searchPackageAndSetEnvGroup sync.WaitGroup
 	searchPackageAndSetEnvGroup.Add(3)
-	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND")
-	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND")
-	go searchPackageAndSetEnv("typst", "TYPST_COMMAND")
+	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND", &searchPackageAndSetEnvGroup)
+	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND", &searchPackageAndSetEnvGroup)
+	go searchPackageAndSetEnv("typst", "TYPST_COMMAND", &searchPackageAndSetEnvGroup)
 	searchPackageAndSetEnvGroup.Wait()
 }
 
