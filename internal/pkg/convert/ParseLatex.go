@@ -12,7 +12,7 @@ import (
 )
 
 type LatexData struct {
-	latexString string `json:"latexString"`
+	LatexString string `json:"latexString"`
 }
 
 func ParseLatexRawToPDF(c *gin.Context) {
@@ -68,7 +68,7 @@ func parseLatexUsingPandocPlainToPdf(c *gin.Context) {
 	if err := c.BindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	out, _ := convertToPdfUsingPandoc("latex", []byte(data.latexString))
+	out, _ := convertToPdfUsingPandoc("latex", []byte(data.LatexString))
 	c.Data(200, "application/pdf", out.Bytes())
 }
 
@@ -78,7 +78,7 @@ func parseLatexUsingGoTexPlainToPdf(c *gin.Context) {
 	if err := c.BindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	pdf, err := gotex.Render(data.latexString, gotex.Options{
+	pdf, err := gotex.Render(data.LatexString, gotex.Options{
 		Command: os.Getenv("LATEX_COMMAND"),
 		Runs:    1,
 	})
@@ -96,7 +96,7 @@ func ParseLatexPlainToHtml(c *gin.Context) {
 	if err := c.BindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	out, _ := convertToHtmlUsingPandoc("latex", []byte(data.latexString))
+	out, _ := convertToHtmlUsingPandoc("latex", []byte(data.LatexString))
 	c.Data(200, "text/html", out.Bytes())
 }
 
