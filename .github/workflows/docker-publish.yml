@@ -93,7 +93,7 @@ jobs:
       - name: Tag and Push to Docker Hub
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}  ${{ secrets.DOCKER_HUB_USER }}/simple-pandoc-server:latest
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} ${{ secrets.DOCKER_HUB_USER }}/simple-pandoc-server:latest
           docker push ${{ secrets.DOCKER_HUB_USER }}/simple-pandoc-server:latest
           docker tag ${{ secrets.DOCKER_HUB_USER }}/simple-pandoc-server:latest ${{ secrets.DOCKER_HUB_USER }}/simple-pandoc-server:${{ steps.vars.outputs.VERSION }}
           docker push ${{ secrets.DOCKER_HUB_USER }}/simple-pandoc-server:${{ steps.vars.outputs.VERSION }}
