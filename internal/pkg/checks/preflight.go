@@ -44,10 +44,11 @@ func determineVersionOfPackageAndSetEnv(command string, envName string) {
 func PreflightPackageSearch() {
 	log.Info("searching for packages")
 	var searchPackageAndSetEnvGroup sync.WaitGroup
-	searchPackageAndSetEnvGroup.Add(3)
+	searchPackageAndSetEnvGroup.Add(2)
 	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND", &searchPackageAndSetEnvGroup)
 	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND", &searchPackageAndSetEnvGroup)
 	go searchPackageAndSetEnv("typst", "TYPST_COMMAND", &searchPackageAndSetEnvGroup)
+	log.Debugf("Waiting for search package to complete")
 	searchPackageAndSetEnvGroup.Wait()
 }
 
