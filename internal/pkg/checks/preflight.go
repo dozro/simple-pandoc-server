@@ -61,7 +61,7 @@ func setMathRenderingEngine(config cfgh.Config) {
 	case "gladtex":
 		mathrenderingengine = convert.Gladtex
 	default:
-		mathrenderingengine = convert.Katex
+		mathrenderingengine = convert.Mathml
 	}
 	convert.SetMathRenderingOptions(mathrenderingengine, config.MathRenderingURL)
 }
