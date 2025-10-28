@@ -14,9 +14,13 @@ RUN apk add pandoc-cli
 RUN apk add typst
 RUN apk add curl
 
+ARG DEBUG_LOGGING=true
+
 ENV LISTEN_ON="0.0.0.0:3030"
 ENV LATEX_COMMAND="/usr/bin/pdflatex"
 ENV GOTEX_ENABLE="false"
+ENV DEBUG=$DEBUG_LOGGING
+ENV MATH_RENDERING_ENGINE=mathml
 EXPOSE 3030
 
 WORKDIR /app

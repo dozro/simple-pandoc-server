@@ -45,6 +45,31 @@ func PreflightPackageSearch() {
 	searchPackageAndSetEnv("typst", "TYPST_COMMAND")
 }
 
+func setMathRenderingEngine(config cfgh.Config) {
+	log.Info("setting math rendering engine for pandoc")
+	var mathrenderingengine convert.MathRenderingEngine
+	switch config.MathRenderingEngine {
+	case "mathjax":
+		mathrenderingengine = convert.Mathjax
+		break
+	case "mathml":
+		mathrenderingengine = convert.Mathml
+		break
+	case "webtex":
+		mathrenderingengine = convert.Webtex
+		break
+	case "katex":
+		mathrenderingengine = convert.Katex
+		break
+	case "gladtex":
+		mathrenderingengine = convert.Gladtex
+		break
+	default:
+		mathrenderingengine = convert.Katex
+	}
+	convert.SetMathRenderingOptions(mathrenderingengine, config.MathRenderingURL)
+}
+
 func PreflightConfiguration(config cfgh.Config) {
 	log.Info("preflight applying configuration")
 	err := os.Setenv("PANDOC_COMMAND", config.PandocCommand)
@@ -59,6 +84,7 @@ func PreflightConfiguration(config cfgh.Config) {
 		log.Errorf("Error setting Environment Variables: %s", err)
 	}
 	convert.SetTimeout(config.Timeout)
+	setMathRenderingEngine(config)
 }
 
 func PreflightConfigCheck(config cfgh.Config) {
