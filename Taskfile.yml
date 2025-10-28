@@ -14,6 +14,8 @@ tasks:
     desc: "prepare the environment to build"
     platforms: [ linux, darwin ]
     dir: '{{.TASKFILE_DIR}}'
+    status:
+      - test -d {{.TASKFILE_DIR}}/out
     cmds:
       - mkdir -p {{.TASKFILE_DIR}}/out
   build:
