@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	cfgh "simple-pandoc-server/internal/pkg/confighandling"
 	"simple-pandoc-server/internal/pkg/convert"
+	"simple-pandoc-server/internal/pkg/zero"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -40,9 +41,29 @@ func determineVersionOfPackageAndSetEnv(command string, envName string) {
 
 func PreflightPackageSearch() {
 	log.Info("searching for packages")
-	searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND")
-	searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND")
-	searchPackageAndSetEnv("typst", "TYPST_COMMAND")
+	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND")
+	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND")
+	go searchPackageAndSetEnv("typst", "TYPST_COMMAND")
+}
+
+func setMathRenderingEngine(config cfgh.Config) {
+	log.Info("setting math rendering engine for pandoc")
+	var mathrenderingengine convert.MathRenderingEngine
+	switch config.MathRenderingEngine {
+	case "mathjax":
+		mathrenderingengine = convert.Mathjax
+	case "mathml":
+		mathrenderingengine = convert.Mathml
+	case "webtex":
+		mathrenderingengine = convert.Webtex
+	case "katex":
+		mathrenderingengine = convert.Katex
+	case "gladtex":
+		mathrenderingengine = convert.Gladtex
+	default:
+		mathrenderingengine = convert.Mathml
+	}
+	convert.SetMathRenderingOptions(mathrenderingengine, config.MathRenderingURL)
 }
 
 func PreflightConfiguration(config cfgh.Config) {
@@ -59,6 +80,8 @@ func PreflightConfiguration(config cfgh.Config) {
 		log.Errorf("Error setting Environment Variables: %s", err)
 	}
 	convert.SetTimeout(config.Timeout)
+	setMathRenderingEngine(config)
+	go zero.Register(config)
 }
 
 func PreflightConfigCheck(config cfgh.Config) {
