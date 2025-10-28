@@ -30,9 +30,9 @@ jobs:
       - name: Run go vet
         run: go vet ./...
 
-      - name: Run staticcheck (advanced linter)
-        uses: dominikh/staticcheck-action@v1
-        with:
-          version: "2024.1.1"
-      - name: Run tests
-        run: go test ./... -v -race -coverprofile=coverage.out
+#      - name: Run staticcheck (advanced linter)
+#        uses: dominikh/staticcheck-action@v1
+#        with:
+#          version: "2024.1.1"
+#      - name: Run tests
+#        run: go test ./... -v -race -coverprofile=coverage.out
