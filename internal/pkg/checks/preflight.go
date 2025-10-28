@@ -1,15 +1,18 @@
-package main
+package checks
 
 import (
 	"bytes"
 	"os"
 	"os/exec"
-	"simple-pandoc-server/convert"
+	cfgh "simple-pandoc-server/internal/pkg/confighandling"
+	"simple-pandoc-server/internal/pkg/convert"
+	"simple-pandoc-server/internal/pkg/zero"
+	"sync"
 
 	log "github.com/sirupsen/logrus"
 )
 
-func searchPackageAndSetEnv(pkgname string, envname string) {
+func searchPackageAndSetEnv(pkgname string, envname string, wg *sync.WaitGroup) {
 	path, err := exec.LookPath(pkgname)
 	if err != nil {
 		log.Errorf("Could not find package %s in path not setting it as Env %s, it has to manually be set or cmdline args have to be used: %s", pkgname, envname, err)
@@ -17,6 +20,7 @@ func searchPackageAndSetEnv(pkgname string, envname string) {
 	}
 	log.Infof("found package %s in path setting it as Env %s: %s", pkgname, envname, path)
 	_ = os.Setenv(envname, path)
+	wg.Done()
 }
 
 func determineVersionOfPackageAndSetEnv(command string, envName string) {
@@ -39,12 +43,35 @@ func determineVersionOfPackageAndSetEnv(command string, envName string) {
 
 func PreflightPackageSearch() {
 	log.Info("searching for packages")
-	searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND")
-	searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND")
-	searchPackageAndSetEnv("typst", "TYPST_COMMAND")
+	var searchPackageAndSetEnvGroup sync.WaitGroup
+	searchPackageAndSetEnvGroup.Add(3)
+	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND", &searchPackageAndSetEnvGroup)
+	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND", &searchPackageAndSetEnvGroup)
+	go searchPackageAndSetEnv("typst", "TYPST_COMMAND", &searchPackageAndSetEnvGroup)
+	searchPackageAndSetEnvGroup.Wait()
 }
 
-func PreflightConfiguration(config Config) {
+func setMathRenderingEngine(config cfgh.Config) {
+	log.Info("setting math rendering engine for pandoc")
+	var mathrenderingengine convert.MathRenderingEngine
+	switch config.MathRenderingEngine {
+	case "mathjax":
+		mathrenderingengine = convert.Mathjax
+	case "mathml":
+		mathrenderingengine = convert.Mathml
+	case "webtex":
+		mathrenderingengine = convert.Webtex
+	case "katex":
+		mathrenderingengine = convert.Katex
+	case "gladtex":
+		mathrenderingengine = convert.Gladtex
+	default:
+		mathrenderingengine = convert.Mathml
+	}
+	convert.SetMathRenderingOptions(mathrenderingengine, config.MathRenderingURL)
+}
+
+func PreflightConfiguration(config cfgh.Config) {
 	log.Info("preflight applying configuration")
 	err := os.Setenv("PANDOC_COMMAND", config.PandocCommand)
 	err = os.Setenv("LATEX_COMMAND", config.LatexCommand)
@@ -58,11 +85,13 @@ func PreflightConfiguration(config Config) {
 		log.Errorf("Error setting Environment Variables: %s", err)
 	}
 	convert.SetTimeout(config.Timeout)
+	setMathRenderingEngine(config)
+	go zero.Register(config)
 }
 
-func PreflightConfigCheck(config Config) {
+func PreflightConfigCheck(config cfgh.Config) {
 	log.Info("preflight checking configuration")
-	if config.trustedProxy == "0.0.0.0" {
+	if config.TrustedProxy == "0.0.0.0" {
 		log.Warn("trusted proxy is set to 0.0.0.0. This is considered UNSAFE. Please set a trusted proxy either by setting ´TRUSTED_PROXY´ or by using the ´-trust-proxy´ command line option.")
 	}
 	if config.Debug {

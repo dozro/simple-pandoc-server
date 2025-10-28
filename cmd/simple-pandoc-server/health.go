@@ -2,13 +2,14 @@ package main
 
 import (
 	"net/http"
+	"simple-pandoc-server/internal/pkg/checks"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func getHealth(c *gin.Context) {
-	isHealthy, err := isHealthy()
+	isHealthy, err := checks.IsHealthy()
 	if isHealthy {
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"isHealthy": isHealthy,
