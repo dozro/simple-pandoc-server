@@ -24,11 +24,11 @@ type Config struct {
 
 func ReadConfigFromEnv() Config {
 	// whether debug mode should be enabled
-	debugOutFlag := flag.Bool("debug", os.Getenv("DEBUG") == "true", "Enable debug mode")
+	debugOutFlag := flag.Bool("debug", defValBool("DEBUG", false), "Enable debug mode")
 	// command timeout
 	timeoutFlag := flag.Duration("timeout", defValTimeDuration("TIMEOUT", 30*time.Second, time.Second), "Timeout for rendering")
 	// ip to listen on
-	listenOnIpFlag := flag.String("listen-on", os.Getenv("LISTEN_ON"), "Listen on IP address Format: \"ip:port\"")
+	listenOnIpFlag := flag.String("listen-on", defValString("LISTEN_ON", "0.0.0.0:3030"), "Listen on IP address Format: \"ip:port\"")
 	// latex command for gotex
 	latexCommandFlag := flag.String("latex-command", os.Getenv("LATEX_COMMAND"), "the path to pdflatex or equiv")
 	// pandoc command
