@@ -14,7 +14,7 @@ func ParseLatexRawToPDF(c *gin.Context) {
 	handleError(err, c)
 	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseLatexDataToPdf)
 	handleError(err, c)
-	c.Data(200, "application/pdf", []byte(out))
+	c.Data(200, "application/pdf", out)
 }
 
 func ParseLatexRawToHTML(c *gin.Context) {
