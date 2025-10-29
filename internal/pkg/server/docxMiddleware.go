@@ -13,7 +13,7 @@ func ParseDocxRawToPDF(c *gin.Context) {
 	handleError(err, c)
 	out, err := convert.ParseDocxToPdf(data)
 	handleError(err, c)
-	c.Data(200, "application/pdf", []byte(out))
+	c.Data(200, "application/pdf", out)
 }
 
 func ParseDocxRawToHTML(c *gin.Context) {
