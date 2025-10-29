@@ -23,6 +23,5 @@ func ParseLatexRawToHTML(c *gin.Context) {
 	handleError(err, c)
 	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseLatexDataToHtml)
 	handleError(err, c)
-	toCache(data, out)
 	c.Data(200, "text/html", out)
 }
