@@ -30,9 +30,5 @@ func extractDataFromReq(c *gin.Context) ([]byte, error) {
 		log.Errorf("File upload error: %s", c.Request.URL.String())
 		return nil, err
 	}
-	err = f.Close()
-	if err != nil {
-		return nil, err
-	}
 	return data, nil
 }
