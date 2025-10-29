@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"simple-pandoc-server/internal/pkg/convert"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ func ParseLatexRawToPDF(c *gin.Context) {
 	log.Debugf("trying to parse latex data received from %s", c.Request.Host)
 	data, err := extractDataFromReq(c)
 	handleError(err, c)
-	out, err := convert.ParseLatexDataToPdf(data)
+	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseLatexDataToPdf)
 	handleError(err, c)
 	c.Data(200, "application/pdf", []byte(out))
 }
@@ -20,7 +21,8 @@ func ParseLatexRawToHTML(c *gin.Context) {
 	log.Debugf("trying to parse latex data received from %s", c.Request.Host)
 	data, err := extractDataFromReq(c)
 	handleError(err, c)
-	out, err := convert.ParseLatexDataToHtml(data)
+	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseLatexDataToHtml)
 	handleError(err, c)
+	toCache(data, out)
 	c.Data(200, "text/html", out)
 }
