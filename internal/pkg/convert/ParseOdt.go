@@ -12,7 +12,7 @@ func ParseOdtDataToHtml(d []byte) ([]byte, error) {
 }
 
 func ParseOdtDataToPdf(d []byte) ([]byte, error) {
-	log.Debugf("starting conversion of typst data to html")
+	log.Debugf("starting conversion of odt data to pdf")
 	out, err := convertToPdfUsingPandoc("odt", d)
 	if err != nil {
 		return nil, err
