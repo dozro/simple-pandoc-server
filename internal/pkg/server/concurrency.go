@@ -17,6 +17,7 @@ func conc_fromCache(ctx context.Context, data []byte) ([]byte, error) {
 		if err != nil {
 			log.Debugf("cache lookup failed: %s", err)
 			errChan <- err
+			return
 		}
 		resultChan <- out
 	}()
