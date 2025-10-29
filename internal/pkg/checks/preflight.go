@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"os/exec"
+	"simple-pandoc-server/internal/pkg/cache"
 	cfgh "simple-pandoc-server/internal/pkg/confighandling"
 	"simple-pandoc-server/internal/pkg/convert"
 	"simple-pandoc-server/internal/pkg/zero"
@@ -16,6 +17,7 @@ func searchPackageAndSetEnv(pkgname string, envname string, wg *sync.WaitGroup) 
 	path, err := exec.LookPath(pkgname)
 	if err != nil {
 		log.Errorf("Could not find package %s in path not setting it as Env %s, it has to manually be set or cmdline args have to be used: %s", pkgname, envname, err)
+		wg.Done()
 		return
 	}
 	log.Infof("found package %s in path setting it as Env %s: %s", pkgname, envname, path)
@@ -44,7 +46,7 @@ func determineVersionOfPackageAndSetEnv(command string, envName string) {
 func PreflightPackageSearch() {
 	log.Info("searching for packages")
 	var searchPackageAndSetEnvGroup sync.WaitGroup
-	searchPackageAndSetEnvGroup.Add(2)
+	searchPackageAndSetEnvGroup.Add(3)
 	go searchPackageAndSetEnv("pandoc", "PANDOC_COMMAND", &searchPackageAndSetEnvGroup)
 	go searchPackageAndSetEnv("pdflatex", "LATEX_COMMAND", &searchPackageAndSetEnvGroup)
 	go searchPackageAndSetEnv("typst", "TYPST_COMMAND", &searchPackageAndSetEnvGroup)
@@ -87,7 +89,13 @@ func PreflightConfiguration(config cfgh.Config) {
 	}
 	convert.SetTimeout(config.Timeout)
 	setMathRenderingEngine(config)
-	go zero.Register(config)
+	go func() {
+		_, err := zero.Register(config)
+		if err != nil {
+			log.Errorf("Error registering zero plugin: %s", err)
+		}
+	}()
+	cache.SetupCache(config.CacheExpiration, config.CacheCleanupInterval)
 }
 
 func PreflightConfigCheck(config cfgh.Config) {

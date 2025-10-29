@@ -5,6 +5,7 @@ go 1.24
 require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/grandcat/zeroconf v1.0.0
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/rwestlund/gotex v0.0.0-20170412080108-3c68d9bfff3b
 	github.com/sirupsen/logrus v1.9.3
 )
