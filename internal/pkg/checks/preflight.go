@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"os/exec"
+	"simple-pandoc-server/internal/pkg/cache"
 	cfgh "simple-pandoc-server/internal/pkg/confighandling"
 	"simple-pandoc-server/internal/pkg/convert"
 	"simple-pandoc-server/internal/pkg/zero"
@@ -94,6 +95,7 @@ func PreflightConfiguration(config cfgh.Config) {
 			log.Errorf("Error registering zero plugin: %s", err)
 		}
 	}()
+	cache.SetupCache(config.CacheExpiration, config.CacheCleanupInterval)
 }
 
 func PreflightConfigCheck(config cfgh.Config) {
