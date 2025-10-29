@@ -85,7 +85,10 @@ func conc_conversionWrapperFunc(ctx context.Context, data []byte, convOp func([]
 	errChan := make(chan error, 1)
 	go func() {
 		out, err := convOp(data)
-		errChan <- err
+		if err != nil {
+			errChan <- err
+			return
+		}
 		resultChan <- out
 	}()
 	// Wait for completion or cancellation
