@@ -1,6 +1,10 @@
 package confighandling
 
-import "os"
+import (
+	"os"
+	"strconv"
+	"time"
+)
 
 func defValString(checkForEnvName string, ifNotExistsVal string) string {
 	if len(os.Getenv(checkForEnvName)) != 0 {
@@ -15,4 +19,15 @@ func defValBool(checkForEnvName string, ifNotExistsVal bool) bool {
 	} else {
 		return ifNotExistsVal
 	}
+}
+
+func defValTimeDuration(checkForEnvName string, ifNotExistsVal time.Duration, modifier time.Duration) time.Duration {
+	if len(os.Getenv(checkForEnvName)) != 0 {
+		d, err := strconv.Atoi(os.Getenv(checkForEnvName))
+		if err != nil {
+			return ifNotExistsVal
+		}
+		return time.Duration(d) * modifier
+	}
+	return ifNotExistsVal
 }
