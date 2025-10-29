@@ -1,3 +1,3 @@
 package convert
 
-func parseDocsRawToHTML()
+//func parseDocsRawToHTML()

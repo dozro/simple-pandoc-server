@@ -20,7 +20,7 @@ func ParseLatexRawToHTML(c *gin.Context) {
 	log.Debugf("trying to parse latex data received from %s", c.Request.Host)
 	data, err := extractDataFromReq(c)
 	handleError(err, c)
-	out, err := convert.ParseLatexRawToHtml(data)
+	out, err := convert.ParseLatexDataToHtml(data)
 	handleError(err, c)
 	c.Data(200, "text/html", out)
 }

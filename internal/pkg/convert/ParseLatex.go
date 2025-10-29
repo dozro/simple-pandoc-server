@@ -8,13 +8,13 @@ import (
 
 func ParseLatexDataToPdf(d []byte) ([]byte, error) {
 	if isGoTexEnabled {
-		return parseLatexUsingGoTexRawToPDF(d)
+		return parseLatexUsingGoTexDataToPDF(d)
 	} else {
-		return parseLatexUsingPandocRawToPdf(d)
+		return parseLatexUsingPandocDataToPdf(d)
 	}
 }
 
-func parseLatexUsingGoTexRawToPDF(data []byte) ([]byte, error) {
+func parseLatexUsingGoTexDataToPDF(data []byte) ([]byte, error) {
 	pdf, err := gotex.Render(string(data), gotex.Options{
 		Command: os.Getenv("LATEX_COMMAND"),
 		Runs:    1,
@@ -25,7 +25,7 @@ func parseLatexUsingGoTexRawToPDF(data []byte) ([]byte, error) {
 	return pdf, nil
 }
 
-func parseLatexUsingPandocRawToPdf(d []byte) ([]byte, error) {
+func parseLatexUsingPandocDataToPdf(d []byte) ([]byte, error) {
 	out, err := convertToPdfUsingPandoc("latex", d)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func parseLatexUsingPandocRawToPdf(d []byte) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-func ParseLatexRawToHtml(d []byte) ([]byte, error) {
+func ParseLatexDataToHtml(d []byte) ([]byte, error) {
 	out, err := convertToHtmlUsingPandoc("latex", d)
 	if err != nil {
 		return nil, err
