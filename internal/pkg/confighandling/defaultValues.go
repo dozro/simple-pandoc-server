@@ -7,23 +7,24 @@ import (
 )
 
 func defValString(checkForEnvName string, ifNotExistsVal string) string {
-	if len(os.Getenv(checkForEnvName)) != 0 {
-		return os.Getenv(checkForEnvName)
-	} else {
-		return ifNotExistsVal
+	envVal := os.Getenv(checkForEnvName)
+	if len(envVal) != 0 {
+		return envVal
 	}
+	return ifNotExistsVal
 }
 func defValBool(checkForEnvName string, ifNotExistsVal bool) bool {
-	if len(os.Getenv(checkForEnvName)) != 0 {
-		return os.Getenv(checkForEnvName) == "true"
-	} else {
-		return ifNotExistsVal
+	envVal := os.Getenv(checkForEnvName)
+	if len(envVal) != 0 {
+		return envVal == "true"
 	}
+	return ifNotExistsVal
 }
 
 func defValTimeDuration(checkForEnvName string, ifNotExistsVal time.Duration, modifier time.Duration) time.Duration {
-	if len(os.Getenv(checkForEnvName)) != 0 {
-		d, err := strconv.Atoi(os.Getenv(checkForEnvName))
+	envVal := os.Getenv(checkForEnvName)
+	if len(envVal) != 0 {
+		d, err := strconv.Atoi(envVal)
 		if err != nil {
 			return ifNotExistsVal
 		}
