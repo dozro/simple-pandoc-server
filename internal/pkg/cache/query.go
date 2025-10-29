@@ -1,5 +1,7 @@
 package cache
+
 import "fmt"
+
 func GetFromCache(cacheKey string) (interface{}, bool) {
 	if c == nil {
 		return nil, false
