@@ -18,7 +18,7 @@ func ParseTypstDataToHtml(d []byte) ([]byte, error) {
 }
 
 func ParseTypstDataToPdf(d []byte) ([]byte, error) {
-	log.Debugf("starting conversion of typst data to html")
+	log.Debugf("starting conversion of typst data to pdf")
 	out, err := convertToPdfUsingPandoc("typst", d)
 	if err != nil {
 		return nil, err
