@@ -16,3 +16,12 @@ func ParseTypstDataToHtml(d []byte) ([]byte, error) {
 	}
 	return out.Bytes(), nil
 }
+
+func ParseTypstDataToPdf(d []byte) ([]byte, error) {
+	log.Debugf("starting conversion of typst data to html")
+	out, err := convertToPdfUsingPandoc("typst", d)
+	if err != nil {
+		return nil, err
+	}
+	return out.Bytes(), nil
+}

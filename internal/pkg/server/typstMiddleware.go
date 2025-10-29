@@ -16,3 +16,12 @@ func ParseTypstRawToHtml(c *gin.Context) {
 	handleError(err, c)
 	c.Data(200, "text/html", out)
 }
+
+func ParseTypstRawToPdf(c *gin.Context) {
+	log.Debugf("trying to parse typst string from %s via %s", c.Request.Host, c.Request.URL.String())
+	data, err := extractDataFromReq(c)
+	handleError(err, c)
+	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseTypstDataToPdf)
+	handleError(err, c)
+	c.Data(200, "application/pdf", out)
+}

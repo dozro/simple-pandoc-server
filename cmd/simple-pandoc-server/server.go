@@ -18,13 +18,15 @@ func startServer(cfg cfgh.Config) {
 	// latex
 	router.POST("/parse/latex/toPdf/raw", server.ParseLatexRawToPDF)
 	router.POST("/parse/latex/toHtml/raw", server.ParseLatexRawToHTML)
-	//router.POST("/parse/latex/toHtml/plain", server.ParseLatexRawToHTML)
-	//router.POST("/parse/latex/toPdf/plain", convert.ParseLatexPlainToPdf)
 	// docx
 	router.POST("/parse/docx/toPdf/raw", server.ParseDocxRawToPDF)
 	router.POST("/parse/docx/toHtml/raw", server.ParseDocxRawToHTML)
+	// odt
+	router.POST("/parse/odt/toPdf/raw", server.ParseOdtRawToPdf)
+	router.POST("/parse/odt/toHtml/raw", server.ParseOdtRawToHTML)
 	// typst
 	router.POST("/parse/typst/toHtml/raw", server.ParseTypstRawToHtml)
+	router.POST("/parse/typst/toPdf/raw", server.ParseTypstRawToPdf)
 	// health
 	router.GET("/health", getHealth)
 	err = router.Run(cfg.ListenOnIP)
