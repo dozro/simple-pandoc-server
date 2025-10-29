@@ -1,7 +1,8 @@
 package convert
 
 import (
-	"github.com/gin-gonic/gin"
+	"bytes"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -9,12 +10,11 @@ type TypstData struct {
 	TypstString string `json:"typstString"`
 }
 
-func ParseTypstRawToHtml(c *gin.Context) {
-	log.Debugf("trying to parse typst string from %s via %s", c.Request.Host, c.Request.URL.String())
-	data, err := extractDataFromReq(c)
+func ParseTypstDataToHtml(d []byte) (bytes.Buffer, error) {
+	log.Debugf("starting conversion of typst data to html")
+	out, err := convertToHtmlUsingPandoc("typst", d)
 	if err != nil {
-		log.Error(err)
+		return bytes.Buffer{}, err
 	}
-	out, _ := convertToHtmlUsingPandoc("typst", data)
-	c.Data(200, "text/html", out.Bytes())
+	return out, nil
 }
