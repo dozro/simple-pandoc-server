@@ -20,6 +20,9 @@ func startServer(cfg cfgh.Config) {
 	router.POST("/parse/latex/toHtml/raw", server.ParseLatexRawToHTML)
 	//router.POST("/parse/latex/toHtml/plain", server.ParseLatexRawToHTML)
 	//router.POST("/parse/latex/toPdf/plain", convert.ParseLatexPlainToPdf)
+	// docx
+	router.POST("/parse/docx/toPdf/raw", server.ParseDocxRawToPDF)
+	router.POST("/parse/docx/toHtml/raw", server.ParseDocxRawToHTML)
 	// typst
 	router.POST("/parse/typst/toHtml/raw", server.ParseTypstRawToHtml)
 	// health
