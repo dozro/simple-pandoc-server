@@ -12,7 +12,7 @@ func ParseDocxRawToPDF(c *gin.Context) {
 	log.Debugf("trying to parse docx data received from %s", c.Request.Host)
 	data, err := extractDataFromReq(c)
 	handleError(err, c)
-	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseDocxToHTML)
+	out, err := concurrentCacheLookupAndRendering(context.Background(), data, convert.ParseDocxToPdf)
 	handleError(err, c)
 	c.Data(200, "application/pdf", out)
 }
