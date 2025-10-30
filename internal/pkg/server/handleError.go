@@ -2,20 +2,17 @@ package server
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
-func handleError(err error, c *gin.Context) {
+func handleError(err error, c *gin.Context) bool {
 	if err == nil {
-		return
+		return false
 	}
 	log.Error(err)
-	c.JSON(http.StatusInternalServerError, gin.H{
-		"message":   err.Error(),
-		"code":      http.StatusInternalServerError,
-		"timestamp": time.Now(),
-	})
+	errn := c.AbortWithError(http.StatusInternalServerError, err)
+	log.Fatal(errn)
+	return true
 }
