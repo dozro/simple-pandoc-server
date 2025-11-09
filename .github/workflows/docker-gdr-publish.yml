@@ -30,9 +30,10 @@ jobs:
           else
             echo "VERSION=" >> $GITHUB_OUTPUT
           fi
-      - name: Log in to Docker Hub
+      - name: Log in to GDR
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
+          registry: git.itsrye.dev
           username: ${{ secrets.GDR_USER }}
           password: ${{ secrets.GDR_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
