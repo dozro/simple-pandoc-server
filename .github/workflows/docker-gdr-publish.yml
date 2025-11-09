@@ -34,7 +34,7 @@ jobs:
             echo "VERSION=" >> $GITHUB_OUTPUT
           fi
       - name: Log in to GDR
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@28fdb31ff34708d19615a74d67103ddc2ea9725c
         with:
           registry: container-registry.itsrye.uk
           username: ${{ secrets.GDR_USER }}
