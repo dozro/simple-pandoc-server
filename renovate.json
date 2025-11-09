@@ -1,3 +1,12 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabled": true,
+  "gomod": {
+    "enabled": true
+  },
+  "managerFilePatterns": [
+    "/(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$/",
+    "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/",
+    "/.github/workflows/*$"
+  ]
 }
