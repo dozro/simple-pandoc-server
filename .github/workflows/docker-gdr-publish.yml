@@ -12,7 +12,7 @@ on:
       - main
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Push Docker image to Gitea Docker Registry
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -22,6 +22,9 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v5
+      - name: Debug registry accessibility
+        run: |
+            curl -v https://git.itsrye.dev/v2/ || true
       - name: Extract version number
         id: vars
         run: |
@@ -53,6 +56,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
         with:
-          subject-name: index.docker.io/my-docker-hub-namespace/my-docker-hub-repository
+          subject-name: git.itsrye.dev/meta/simple-pandoc-server
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
