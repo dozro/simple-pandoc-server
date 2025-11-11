@@ -1,13 +1,13 @@
-FROM alpine:latest AS buildenv
+FROM alpine:3 AS buildenv
 
-RUN apk add go
-RUN apk add npm
+RUN apk --no-cache add go
+RUN apk --no-cache add npm
 RUN npm install -g @go-task/cli
 WORKDIR /build
 COPY . .
 RUN task
 
-FROM alpine:latest
+FROM alpine:3
 
 LABEL org.opencontainers.image.authors="Rye <docker@itsrye.dev>"
 LABEL org.opencontainers.image.source="https://github.com/dozro/simple-pandoc-server"
@@ -16,9 +16,12 @@ LABEL org.opencontainers.image.documentation="https://github.com/dozro/simple-pa
 LABEL org.opencontainers.image.vendor="itsrye.dev"
 LABEL org.opencontainers.image.licenses="Hippocratic-2.1"
 
-RUN apk add pandoc-cli
-RUN apk add typst
-RUN apk add curl
+RUN apk --no-cache add pandoc-cli
+RUN apk --no-cache add typst
+RUN apk --no-cache add curl
+
+# add user to run server
+RUN adduser -S -u 8231 sps
 
 ARG DEBUG_LOGGING=true
 
@@ -34,4 +37,5 @@ COPY --from=buildenv /build/out/simple-pandoc-server /app/simple-pandoc-server
 
 HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3030/health || exit 1
 
+USER sps
 ENTRYPOINT ["/app/simple-pandoc-server"]
