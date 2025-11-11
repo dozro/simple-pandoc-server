@@ -12,6 +12,7 @@ FROM alpine:3
 LABEL org.opencontainers.image.authors "Rye <docker@itsrye.dev>"
 LABEL org.opencontainers.image.source "https://github.com/dozro/simple-pandoc-server"
 LABEL org.opencontainers.image.title "Simple Pandoc Server"
+LABEL org.opencontainers.image.description "A simple server to proxy pandoc usage"
 LABEL org.opencontainers.image.documentation "https://github.com/dozro/simple-pandoc-server/wiki"
 LABEL org.opencontainers.image.vendor "itsrye.dev"
 LABEL org.opencontainers.image.licenses "Hippocratic-2.1"
