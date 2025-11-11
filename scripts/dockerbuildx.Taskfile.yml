@@ -1,0 +1,28 @@
+# A guide to the usage of Taskfile: https://taskfile.dev/docs/guide
+
+version: 3
+
+vars:
+  IMAGE: "git.itsrye.dev/meta/simple-pandoc-server"
+
+tasks:
+  docker-buildx:
+    aliases:
+      - buildx
+      - docker-multiarch-build
+    desc: "run docker buildx to build the docker image for multiarch"
+    dir: '{{.TASKFILE_DIR}}/..'
+    method: checksum
+    sources:
+      - "cmd/*"
+      - "internal/*"
+      - "Dockerfile"
+    requires:
+      vars:
+        - IMAGE
+    preconditions:
+      - command docker || exit 1
+    cmds:
+      - docker buildx build --platform=linux/amd64,linux/arm64 -t {{.IMAGE}}:state-{{.CHECKSUM}} .
+
+

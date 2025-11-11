@@ -6,6 +6,8 @@ includes:
   internal:
     dir: ./internal
     taskfile: ./internal
+  scripts:
+    taskfile: ./scripts/dockerbuildx.Taskfile.yml
 
 method: checksum
 
