@@ -1,0 +1,14 @@
+when:
+  - event: push
+    branch:
+        - main
+        - devel
+        - feat/*
+        - enh/
+
+steps: 
+  - name: securitycheck
+    image: aquasec/trivy:latest
+    commands: 
+        - trivy fs --exit-code 1 --skip-dirs web/ --skip-dirs docs/ --severity MEDIUM,HIGH,CRITICAL .
+      
