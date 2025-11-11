@@ -7,6 +7,11 @@
   "managerFilePatterns": [
     "/(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$/",
     "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/",
-    "/.github/workflows/*$"
-  ]
+    "/.github/workflows/*$",
+    "/^\\.woodpecker(?:/[^/]+)?\\.ya?ml$/"
+  ],
+  "additionalReviewers": [
+    "Ryee"
+  ],
+  "assigneesFromCodeOwners": true
 }

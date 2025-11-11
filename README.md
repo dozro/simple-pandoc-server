@@ -1,5 +1,10 @@
 # simple pandoc server
 
+[![Dependabot Updates](https://github.com/dozro/simple-pandoc-server/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/dozro/simple-pandoc-server/actions/workflows/dependabot/dependabot-updates)
+[![Docker](https://github.com/dozro/simple-pandoc-server/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/dozro/simple-pandoc-server/actions/workflows/docker-publish.yml)
+[![go-lint-test-vet.yml](https://github.com/dozro/simple-pandoc-server/actions/workflows/go-lint-test-vet.yml/badge.svg)](https://github.com/dozro/simple-pandoc-server/actions/workflows/go-lint-test-vet.yml)
+
+
 simple-pandoc-server is a lightweight HTTP server wrapper for Pandoc that allows document conversions via API-calls.  
 
 ## Motivation
