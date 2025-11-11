@@ -1,4 +1,4 @@
-FROM alpine:3 AS buildenv
+FROM alpine:20250108 AS buildenv
 
 RUN apk --no-cache add go
 RUN apk --no-cache add npm
@@ -7,7 +7,7 @@ WORKDIR /build
 COPY . .
 RUN task
 
-FROM alpine:3
+FROM alpine:20250108
 
 LABEL org.opencontainers.image.authors="Rye <docker@itsrye.dev>"
 LABEL org.opencontainers.image.source="https://github.com/dozro/simple-pandoc-server"
