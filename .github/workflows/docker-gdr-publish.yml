@@ -21,7 +21,7 @@ jobs:
       id-token: write
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Debug registry accessibility
         run: |
             curl -v https://container-registry.itsrye.uk/v2/ || true
