@@ -32,7 +32,7 @@ jobs:
             echo "VERSION=" >> $GITHUB_OUTPUT
           fi
       - name: Log in to Docker Hub
-        uses: docker/login-action@28fdb31ff34708d19615a74d67103ddc2ea9725c
+        uses: docker/login-action@916386b00027d425839f8da46d302dab33f5875b
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
